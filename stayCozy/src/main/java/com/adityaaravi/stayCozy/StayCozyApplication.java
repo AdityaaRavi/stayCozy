@@ -5,6 +5,7 @@ import com.adityaaravi.stayCozy.objects.WeatherObj;
 import com.adityaaravi.stayCozy.objects.WoeidSearchResult;
 // import com.adityaaravi.stayCozy.objects.archive.ZipData;
 // import com.adityaaravi.stayCozy.objects.archive.ZipWrapper;
+import com.adityaaravi.stayCozy.utilities.ClothesRecommender;
 
 // library imports
 
@@ -157,7 +158,7 @@ public class StayCozyApplication {
 		return args -> {
 			
 			// Sample input
-			String cityName = "Erode";
+			String cityName = "Chennai";
 			String destPhoneNumber = "+14086917228";
 			
 			// Step 1: get current weather (Step 0.5: zip code to woeid)
@@ -167,19 +168,21 @@ public class StayCozyApplication {
 			if (woeid != -1){
 				WeatherObj curr = getMostRecentWeatherPred(restTemplate, woeid, getDate());
 				log.info(curr.getMin_temp() + " " + curr.getMax_temp());
-
-				toSend = "The weather at " + cityName + //woeidAndCityName[1] + 
-							" is " + curr.getWeather_state_name() + 
-							" and the temperature is between " + String.format(TEMP_FORMAT, curr.getMin_temp()) + 
-							" Celcius and " + String.format(TEMP_FORMAT, curr.getMax_temp()) + " Celcius.";
 				
 				// Step 2: get clothing recomendation
-
-
+				String clothingRecomendation = ClothesRecommender.clothRecomendation(curr);
 
 				// Step 3: send the recommendation
-				//Message message = sendMessage(toSend, destPhoneNumber);
-				//log.info(message.getSid());
+				toSend = "The weather at " + cityName + " is " + curr.getWeather_state_name() + ".\n" +
+						 "The temperature range is: " + String.format(TEMP_FORMAT, ClothesRecommender.cToF(curr.getMin_temp())) + "-" +
+						 String.format(TEMP_FORMAT, ClothesRecommender.cToF(curr.getMax_temp())) + "F or " + String.format(TEMP_FORMAT, curr.getMin_temp()) + 
+						 "-" + String.format(TEMP_FORMAT, curr.getMax_temp()) + "C.";
+
+				Message message = sendMessage(toSend, destPhoneNumber);
+				Message message2 = sendMessage(clothingRecomendation, destPhoneNumber);
+
+				log.info(message.getSid());
+				log.info(message2.getSid());
 
 			}else{
 				toSend = "\nCity not found. Please try again.\n" + 
@@ -189,7 +192,8 @@ public class StayCozyApplication {
 				log.info(message.getSid());
 			}
 
-			log.info(toSend);				
+			log.info(toSend);	
+			System.exit(0);			
 		};
 	}
 
