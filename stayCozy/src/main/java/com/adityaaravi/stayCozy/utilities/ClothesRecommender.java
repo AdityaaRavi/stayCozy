@@ -32,7 +32,7 @@ public class ClothesRecommender {
         if (morning.equals(afternoon)) {
             return "You may prefer to wear " + morning + " through out the day.";
         } else {
-            return "You may prefer to wear " + morning + " in the morning and a " + afternoon + " as it gets hotter.";
+            return "You may prefer to wear " + morning + " in the morning and " + afternoon + " as it gets hotter.";
         }
     }
 
