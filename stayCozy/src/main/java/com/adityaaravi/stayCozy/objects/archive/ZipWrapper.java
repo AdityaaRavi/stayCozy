@@ -1,4 +1,4 @@
-package com.adityaaravi.stayCozy.objects;
+package com.adityaaravi.stayCozy.objects.archive;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

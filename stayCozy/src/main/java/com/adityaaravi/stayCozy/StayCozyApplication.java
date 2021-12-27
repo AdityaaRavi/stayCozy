@@ -3,8 +3,8 @@ package com.adityaaravi.stayCozy;
 // local imports
 import com.adityaaravi.stayCozy.objects.WeatherObj;
 import com.adityaaravi.stayCozy.objects.WoeidSearchResult;
-import com.adityaaravi.stayCozy.objects.ZipData;
-import com.adityaaravi.stayCozy.objects.ZipWrapper;
+// import com.adityaaravi.stayCozy.objects.archive.ZipData;
+// import com.adityaaravi.stayCozy.objects.archive.ZipWrapper;
 
 // library imports
 
@@ -22,6 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //// imports to help retrive data from the remote api client
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 /// importing twilio
@@ -38,6 +39,7 @@ import java.time.LocalDateTime;
 public class StayCozyApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(StayCozyApplication.class);
+	private static final String TEMP_FORMAT = "%.2f";
 
 	public static void main(String[] args) {
 		SpringApplication.run(StayCozyApplication.class, args);
@@ -56,7 +58,7 @@ public class StayCozyApplication {
 
 		https://newbedev.com/cannot-deserialize-instance-of-object-out-of-start-array-token-in-spring-webservice
 	*/
-	private WeatherObj getMostRecentWeatherPred(RestTemplate restTemplate, String woeid, String date) {
+	private WeatherObj getMostRecentWeatherPred(RestTemplate restTemplate, int woeid, String date) {
 		// get the most recent weather prediction from the meta weather api
 		log.info("Step 1: Retriving Weather now...");
 
@@ -77,7 +79,7 @@ public class StayCozyApplication {
 		Twilio.init(API_KEY, API_SECRET, ACCOUNT_SID);
 		Message message = Message.creator(
 			new com.twilio.type.PhoneNumber(destNumber),
-			new com.twilio.type.PhoneNumber("+16107959082"),
+			new com.twilio.type.PhoneNumber("+16107959082"), // my twilio trial number
 			text)
 		.create();
 
@@ -89,32 +91,65 @@ public class StayCozyApplication {
 	}
 	
 
+	/* 
 	private String[] getWoeidAndCityName(String zipcode, RestTemplate restTemplate){
-		log.info("Step 0: Retriving Woeid and City Name now...");
-		// step 0: Zip code to city name
-		final String API_KEY = System.getenv("ZIP_API_US_KEY");
-
-		String requestUrl = "https://service.zipapi.us/zipcode/" + zipcode + "/?X-API-KEY=" + API_KEY;
-
-		ZipWrapper wrap = restTemplate.getForObject(requestUrl, ZipWrapper.class);
-		ZipData data = wrap.getData();
-
-		log.info(data.toString());
-		// for some reason, the result is of the form: {latt=null, long=null, city="Davis"} -- i.e only city is correct
-
-		// step 0.5: city name to where on earth id
-		String url = "https://www.metaweather.com/api/location/search/?lattlong=" + data.getLatitude() + "," + data.getLongitude();
 		
-		log.info(url);
+	// 	log.info("Step 0: Retriving Woeid and City Name now...");
+	// 	// step 0: Zip code to city name
+	// 	// final String API_KEY = System.getenv("ZIP_API_US_KEY");
+
+	// 	// String requestUrl = "https://service.zipapi.us/zipcode/" + zipcode + "/?X-API-KEY=" + API_KEY;
+
+	// 	// ZipWrapper wrap = restTemplate.getForObject(requestUrl, ZipWrapper.class);
+	// 	// ZipData data = wrap.getData();
+
+	// 	//log.info(data.toString());
+	// 	// for some reason, the result is of the form: {latt=null, long=null, city="Davis"} -- i.e only city is correct
+
+	// 	// step 0.5: city name to where on earth id
+	// 	String url = "https://www.metaweather.com/api/location/search/?query=" + zipcode;//lattlong=" + data.getLatitude() + "," + data.getLongitude();
 		
-		WoeidSearchResult[] results = restTemplate.getForObject(url, WoeidSearchResult[].class);
-		WoeidSearchResult result = results[0];
+	// 	log.info(url);
+		
+	// 	WoeidSearchResult[] results = restTemplate.getForObject(url, WoeidSearchResult[].class);
+	// 	WoeidSearchResult result = results[0];
 
-		String[] answer = {result.getWoeid(), data.getCity()};
+	// 	String[] answer = {result.getWoeid(), zipcode}; //data.getCity()};
 
-		return answer;
+	// 	return answer;
+	// }
+	*/
+
+
+	private void printArray(Object[] o){
+		for(Object a : o){
+			log.info(a.toString());
+		}
 	}
 
+	private int getWoeid(String cityName, RestTemplate restTemplate){
+		
+		log.info("Step 0: Retriving Woeid now...");
+		String cityNameEdited = (cityName.strip()).replace(" ", "%20");
+		
+		String url = "https://www.metaweather.com/api/location/search/?query=" + cityNameEdited;//lattlong=" + data.getLatitude() + "," + data.getLongitude();
+		int minUrlLength = url.length() - cityNameEdited.length();
+
+		log.info(url);
+		WoeidSearchResult[] results = {};
+		
+		while(results.length == 0 && url.length() > minUrlLength){
+			results = restTemplate.getForObject(url, WoeidSearchResult[].class);
+			printArray(results);
+			url = url.substring(0, url.length() - 1);
+		}
+
+		for (WoeidSearchResult w : results){
+			if(w.getTitle().equals(cityName)) return w.getWoeid(); 
+		}
+
+		return -1;		
+	}
 	
 
 	@Bean
@@ -122,24 +157,39 @@ public class StayCozyApplication {
 		return args -> {
 			
 			// Sample input
-			String zipcode = "95616";
-			String[] woeidAndCityName = getWoeidAndCityName(zipcode, restTemplate);
-
-			// Step 1: get current weather (Step 0.5: zip code to woeid)
-			WeatherObj curr = getMostRecentWeatherPred(restTemplate, woeidAndCityName[0], getDate());
-			log.info(curr.getMin_temp() + " " + curr.getMax_temp());
-
-			// Step 2: get clothing recomendation
-
-
-			// Step 3: send the recommendation
-			String toSend = "The weather at " + woeidAndCityName[1] + 
-							" is " + curr.getWeather_state_name() + 
-							" and the temperature is between " + curr.getMin_temp() + 
-							" Celcius and " + curr.getMax_temp() + " Celcius.";
+			String cityName = "Erode";
+			String destPhoneNumber = "+14086917228";
 			
-			Message message = sendMessage(toSend, "+14086917228");
-        	log.info(message.getSid());			
+			// Step 1: get current weather (Step 0.5: zip code to woeid)
+			int woeid = getWoeid(cityName, restTemplate);
+			String toSend = "";
+
+			if (woeid != -1){
+				WeatherObj curr = getMostRecentWeatherPred(restTemplate, woeid, getDate());
+				log.info(curr.getMin_temp() + " " + curr.getMax_temp());
+
+				toSend = "The weather at " + cityName + //woeidAndCityName[1] + 
+							" is " + curr.getWeather_state_name() + 
+							" and the temperature is between " + String.format(TEMP_FORMAT, curr.getMin_temp()) + 
+							" Celcius and " + String.format(TEMP_FORMAT, curr.getMax_temp()) + " Celcius.";
+				
+				// Step 2: get clothing recomendation
+
+
+
+				// Step 3: send the recommendation
+				//Message message = sendMessage(toSend, destPhoneNumber);
+				//log.info(message.getSid());
+
+			}else{
+				toSend = "\nCity not found. Please try again.\n" + 
+						 "Try to spell out the entire name of the city, example: \"San Jose\" or try a nearby bigger city.";
+				
+				Message message = sendMessage(toSend, destPhoneNumber);
+				log.info(message.getSid());
+			}
+
+			log.info(toSend);				
 		};
 	}
 

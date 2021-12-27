@@ -1,17 +1,18 @@
-package com.adityaaravi.stayCozy.objects;
+package com.adityaaravi.stayCozy.objects.archive;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZipData {
+    // city name
+    private String city;
+    
     // latitude
     private String latitude;
 
     // longitude
     private String longitude;
 
-    // city name
-    private String city;
 
     // getter and setter methods for each field above
     public String getLatitude() {
