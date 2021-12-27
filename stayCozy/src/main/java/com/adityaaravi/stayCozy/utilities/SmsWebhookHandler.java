@@ -59,15 +59,21 @@ public class SmsWebhookHandler {
     
     @ResponseBody
     public String handleSmsWebhook
-    (@RequestParam("From") String from, @RequestParam("Body") String body){
+    (@RequestParam("From") String from, @RequestParam("Body") String body, @RequestParam("FromCity") String location){
 
-        String cityName = body;
+        String cityName = body.toLowerCase();
         String destPhoneNumber = from;
+
+        if(cityName.equals("how")){
+            String ret = "Send 'mine' to get weather and clothing recomendations for your current location, or the name of a city for which you want the same details.";
+            return new MessagingResponse.Builder().message(new Message.Builder(ret).build())
+            .build().toXml();
+        }
 
         RestTemplate restTemplate = new RestTemplate();
 
         // Step 1: get current weather (Step 0.5: zip code to woeid)
-        int woeid = getWoeid(cityName, restTemplate);
+        int woeid = getWoeid((cityName.equals("mine") ? location.toLowerCase() : cityName), restTemplate);
         String toSend = "";
         String clothingRecomendation = "";
         boolean success = false;
@@ -80,7 +86,7 @@ public class SmsWebhookHandler {
             clothingRecomendation = ClothesRecommender.clothRecomendation(curr);
 
             // Step 3: send the recommendation
-            toSend = "The weather at " + cityName + " is " + curr.getWeather_state_name() + ".\n" +
+            toSend = "The weather at " + (cityName.equals("mine") ? location.toLowerCase() : cityName) + " is " + curr.getWeather_state_name() + ".\n" +
                         "The temperature range is: " + String.format(TEMP_FORMAT, ClothesRecommender.cToF(curr.getMin_temp())) + "-" +
                         String.format(TEMP_FORMAT, ClothesRecommender.cToF(curr.getMax_temp())) + "F or " + String.format(TEMP_FORMAT, curr.getMin_temp()) + 
                         "-" + String.format(TEMP_FORMAT, curr.getMax_temp()) + "C.";
@@ -133,7 +139,7 @@ public class SmsWebhookHandler {
 		Twilio.init(API_KEY, API_SECRET, ACCOUNT_SID);
 		com.twilio.rest.api.v2010.account.Message message = com.twilio.rest.api.v2010.account.Message.creator(
 			new com.twilio.type.PhoneNumber(destNumber),
-			new com.twilio.type.PhoneNumber("+16107959082"), // my twilio trial number
+			new com.twilio.type.PhoneNumber("+16893004701"), // my twilio trial number old: 16107959082
 			text)
 		.create();
 
@@ -170,7 +176,7 @@ public class SmsWebhookHandler {
 		}
 
 		for (WoeidSearchResult w : results){
-			if(w.getTitle().equals(cityName)) return w.getWoeid(); 
+			if(w.getTitle().toLowerCase().equals(cityName)) return w.getWoeid(); 
 		}
 
 		return -1;		

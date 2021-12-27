@@ -14,17 +14,17 @@ package com.adityaaravi.stayCozy;
 // import org.slf4j.LoggerFactory;
 
 //// basically the main method --> this is the entry point for the application
-import org.springframework.boot.CommandLineRunner;
+// import org.springframework.boot.CommandLineRunner;
 
 //// other Spring Boot imports
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//// imports to help retrive data from the remote api client
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+// //// imports to help retrive data from the remote api client
+// import org.springframework.boot.web.client.RestTemplateBuilder;
+// import org.springframework.context.annotation.Bean;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.web.client.RestTemplate;
 
 // /// importing twilio
 // import com.twilio.Twilio;
