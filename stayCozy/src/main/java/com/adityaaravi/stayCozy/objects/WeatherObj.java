@@ -1,13 +1,16 @@
 package com.adityaaravi.stayCozy.objects;
+import java.math.BigInteger;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+// a list of these weather objects is returned by the API --> stored as the object "PredictionList" here 
 // This class corresponds to the json objects used by meta weather to provide weather data.
 // note that the most recent json object in the meta weather api contains the most recent weather prediction.
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WeatherObj {
     // unique id
-    private long id;
+    private BigInteger id;
 
     // weather condition
     private String weather_state_name;
@@ -16,20 +19,20 @@ public class WeatherObj {
     private String applicable_date;
 
     // min temperature
-    private double min_temp;
+    private Double min_temp;
 
     // max temperature
-    private double max_temp;
+    private Double max_temp;
 
     // wind speed
-    private double wind_speed;
+    private Double wind_speed;
 
     // create getter and setter methods for each field above
-    public long getId() {
+    public BigInteger getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId (BigInteger id) {
         this.id = id;
     }
 
@@ -49,31 +52,31 @@ public class WeatherObj {
         this.applicable_date = applicable_date;
     }
 
-    public double getMin_temp() {
+    public Double getMin_temp() {
         return min_temp;
     }
 
-    public void setMin_temp(double min_temp) {
+    public void setMin_temp(Double min_temp) {
         this.min_temp = min_temp;
     }
 
-    public double getMax_temp() {
+    public Double getMax_temp() {
         return max_temp;
     }
 
-    public void setMax_temp(double max_temp) {
+    public void setMax_temp(Double max_temp) {
         this.max_temp = max_temp;
     }
 
-    public double getWind_speed() {
+    public Double getWind_speed() {
         return wind_speed;
     }
 
-    public void setWind_speed(double wind_speed) {
+    public void setWind_speed(Double wind_speed) {
         this.wind_speed = wind_speed;
     }
 
-    // empty constructor as the jackson library will automatically fill in the fields
+    // empty constructor
     public WeatherObj() {
     }
 
