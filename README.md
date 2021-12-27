@@ -84,7 +84,13 @@ For phone numbers that I haven't verified with Twilio to be mine, I need a paid 
 ## Resources
 These are a selection of resources that I found particularly useful while building this project, and you might too if you are building something with the technologies used here.
 
-- [Webhooks](https://www.chargebee.com/blog/what-are-webhooks-explained/)
-    - "The fundamental difference between API calls and webhooks is that while the former works on request-based output mechanisms, and the latter works on event-based output mechanisms."
-- 
+- [Sending an SMS with Twilio](https://www.twilio.com/docs/sms)
+- [Recieving and replying to a message with Twilio on Java](https://www.twilio.com/blog/receive-respond-sms-java-twilio)
+- [Read data from a RESTful API with Spring Boot](https://spring.io/guides/gs/consuming-rest/)
+- [What are RESTful APIs anyway?](https://stackoverflow.com/questions/32369856/non-restful-vs-restful)
+- [Webhooks and when they are used instead of APIs](https://www.chargebee.com/blog/what-are-webhooks-explained/)
+- [Ngork](https://dashboard.ngrok.com/get-started/setup)
+    - Temporary Streamlined Port Forwarding
+
+
 
