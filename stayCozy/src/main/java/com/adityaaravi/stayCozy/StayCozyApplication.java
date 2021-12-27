@@ -26,6 +26,10 @@ import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
+// Date and time
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime;    
+
 @SpringBootApplication
 public class StayCozyApplication {
 
@@ -40,42 +44,63 @@ public class StayCozyApplication {
 		return builder.build();
 	}
 
+	/*
+		Lesson learned:
+		When you need to parse a list of json objects--i.e. the file begins and end with a '[' and ']' 
+		respectively rather than '{' and '}', you don't need a wrapper class--you just directly retrieve it
+		as a list as done below.
+
+		https://newbedev.com/cannot-deserialize-instance-of-object-out-of-start-array-token-in-spring-webservice
+	*/
+	private WeatherObj getMostRecentWeatherPred(RestTemplate restTemplate, String woeid, String date) {
+		// get the most recent weather prediction from the meta weather api
+		log.info("Retriving Weather now...");
+
+		String url = "https://www.metaweather.com/api/location/" + woeid + "/" + date;
+		WeatherObj[] predictions = restTemplate.getForObject(url, WeatherObj[].class);
+		
+		return predictions[0];
+	}
+
+
+	private Message sendMessage(String text, String destNumber){
+		final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
+		final String API_KEY = System.getenv("TWILIO_API_KEY");
+		final String API_SECRET = System.getenv("TWILIO_API_SECRET");
+
+		Twilio.init(API_KEY, API_SECRET, ACCOUNT_SID);
+		Message message = Message.creator(
+			new com.twilio.type.PhoneNumber(destNumber),
+			new com.twilio.type.PhoneNumber("+16107959082"),
+			text)
+		.create();
+
+		return message;
+	}
+
+	private String getDate(){
+		return DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now());
+	}
+	
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
-			log.info("Testing the API");
-			//final String LONDON = "https://www.metaweather.com/api/location/search/?query=london";
-			final String WOEID_TEST = "https://www.metaweather.com/api/location/44418/2021/12/27";
+			// step 0: Zip code to city name
+			
 
-			// Test to retrive information from the metaweather API done!
+			// step 1: city name to where on earth id
 
-			/*
-				Lesson learned:
-				When you need to parse a list of json objects--i.e. the file begins and end with a '[' and ']' respectively rather than '{' and '}'
-				you don't need a wrapper class
-				https://newbedev.com/cannot-deserialize-instance-of-object-out-of-start-array-token-in-spring-webservice
-			*/
-			WeatherObj[] predictions = restTemplate.getForObject(WOEID_TEST, WeatherObj[].class);
-			WeatherObj curr = predictions[0];
 
+			// Step 1: get current weather
+			WeatherObj curr = getMostRecentWeatherPred(restTemplate, "44418", getDate());
 			log.info(curr.getMin_temp() + " " + curr.getMax_temp());
 
-			// Step 2: figure out how to use twillo to send text messages
-			final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
-    		//final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
-			final String API_KEY = System.getenv("TWILIO_API_KEY");
-			final String API_SECRET = System.getenv("TWILIO_API_SECRET");
+			// Step 2: get clothing recomendation
 
+
+			// Step 3: send the recommendation
 			String toSend = "The weather is " + curr.getWeather_state_name() + " and the temperature is between " + curr.getMin_temp() + " and " + curr.getMax_temp();
-
-			//Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-			Twilio.init(API_KEY, API_SECRET, ACCOUNT_SID);
-        	Message message = Message.creator(
-                new com.twilio.type.PhoneNumber("+14086917228"),
-                new com.twilio.type.PhoneNumber("+16107959082"),
-                toSend)
-			.create();
-
+			Message message = sendMessage(toSend, "+14086917228");
         	log.info(message.getSid());			
 		};
 	}
