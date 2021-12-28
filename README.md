@@ -25,7 +25,7 @@ An on-demand SMS service that provides the current weather at your location or a
 
 [![Hyperlink to youtube video](/readmeResources/yt_thumbnail_1.png)](https://www.youtube.com/watch?v=adC2jgxvGY8)
 
-Click the Thumnail to watch the demo!
+Click the Thumbnail to watch the demo!
 
 ### *Pictures*:
 
