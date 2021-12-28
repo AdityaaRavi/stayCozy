@@ -65,7 +65,8 @@ public class SmsWebhookHandler {
         String destPhoneNumber = from;
 
         if(cityName.equals("how")){
-            String ret = "Send 'mine' to get weather and clothing recomendations for your current location, or the name of a city for which you want the same details.";
+            sendMessage("Send 'mine' to get weather and clothing recomendations for your current location", from);
+            String ret = "or the name of a city for which you want the same details.";
             return new MessagingResponse.Builder().message(new Message.Builder(ret).build())
             .build().toXml();
         }

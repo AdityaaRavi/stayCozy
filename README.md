@@ -22,8 +22,28 @@ An on-demand SMS service that provides the current weather at your location or a
 ## App in action!
 
 ### Youtube:
+<!--
+![[Hyper link to youtube video](https://img.youtube.com/vi/adC2jgxvGY8/0.jpg)](https://www.youtube.com/watch?v=adC2jgxvGY8)
+-->
+
+<iframe
+    width="640"
+    height="480"
+    src="https://www.youtube.com/watch?v=adC2jgxvGY8"
+    frameborder="0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+>
+</iframe>
+
 
 ### Pictures:
+
+***Commands "how" and "mine" in action:***
+![Command: How and mine](/readmeResources/how_and_mine.jpg)
+
+***Example of getting a recomendation for any city:***
+![Command: City name](/readmeResources/sacremento.jpg)
 
 ## Usage instructions (once the program is running):
 Command [SMS these]                 |   what does it do?
@@ -69,7 +89,7 @@ For phone numbers that I haven't verified with Twilio to be mine, I need a paid 
         - or the command `tar -xf ngrok-stable-linux-amd64.tgz` on Linux and MacOS
     - Run the command provided in "part 2" of the linked website that is unique to you.
     - Run the command: `./nrogk http 8080`
-    - Copy one of the links provided on the terminal.
+    - Copy one of the **Forwarding** links provided on the terminal.
     - Go to `Twilio Console > Develop > Phone Numbers > Manage > Active Numbers > click on the number > Change the "A message comes in" link at the Messaging section at the bottom of the page to the link you copied above.`
 
 
@@ -90,7 +110,7 @@ These are a selection of resources that I found particularly useful while buildi
 - [What are RESTful APIs anyway?](https://stackoverflow.com/questions/32369856/non-restful-vs-restful)
 - [Webhooks and when they are used instead of APIs](https://www.chargebee.com/blog/what-are-webhooks-explained/)
 - [Ngork](https://dashboard.ngrok.com/get-started/setup)
-    - Temporary Streamlined Port Forwarding
+    - Streamlined Temporary Port Forwarding
 
 
 
