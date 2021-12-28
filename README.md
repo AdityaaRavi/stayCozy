@@ -19,31 +19,29 @@ An on-demand SMS service that provides the current weather at your location or a
 
 4. The service then uses Twillio to send this recomendation via SMS back to the user.
 
-## App in action!
+## See the App in action!
 
-### Youtube:
+### *Youtube*:
 
-![[Hyper link to youtube video](https://img.youtube.com/vi/adC2jgxvGY8/0.jpg)](https://www.youtube.com/watch?v=adC2jgxvGY8)
+[![Hyperlink to youtube video](/readmeResources/yt_thumbnail_1.png)](https://www.youtube.com/watch?v=adC2jgxvGY8)
 
+Click the Thumnail to watch the demo!
 
-<!--iframe
-    width="640"
-    height="480"
-    src="https://www.youtube.com/watch?v=adC2jgxvGY8"
-    frameborder="0"
-    allow="autoplay; encrypted-media"
-    allowfullscreen
->
-</iframe-->
+### *Pictures*:
 
+| **Commands "how" and "mine" in action:** | **Example of getting a recomendation for any city:**
+| ----                                     | ----
+| ![Command: How and mine](/readmeResources/how_and_mine_1.jpg) | ![Command: City name](/readmeResources/sacremento_1.jpg)
 
-### Pictures:
+<!--
+**Commands "how" and "mine" in action:**
 
-***Commands "how" and "mine" in action:***
-![Command: How and mine](/readmeResources/how_and_mine.jpg)
+![Command: How and mine](/readmeResources/how_and_mine_1.jpg)
 
-***Example of getting a recomendation for any city:***
-![Command: City name](/readmeResources/sacremento.jpg)
+**Example of getting a recomendation for any city:**
+
+![Command: City name](/readmeResources/sacremento_1.jpg)
+-->
 
 ## Usage instructions (once the program is running):
 Command [SMS these]                 |   what does it do?
