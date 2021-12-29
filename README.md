@@ -1,5 +1,5 @@
 # stayCozy
-An on-demand SMS service that provides the current weather at your location or a city of your choice along with a recomendation on what you can choose to wear to be cozy. 
+An on-demand SMS service that provides the current weather at your location or a city of your choice along with a recommendation on what you can choose to wear to be cozy. 
 
 ## Tools and Technologies used:
 - Spring Boot
