@@ -51,7 +51,8 @@ Command [SMS these]                 |   what does it do?
 name of city [Example: "San Jose"]  |   Provides the weather forecast and clothing recomendation for the given city
 
 ## How to get it running:
-For phone numbers that I haven't verified with Twilio to be mine, I need a paid subscription to send and recieve messages, if you have some time to burn, this is how you can get it running yourself for free!
+For phone numbers that I haven't verified with Twilio to be mine, I need a paid subscription to send and recieve messages...
+if you have some time to burn, this is how you can get it running yourself for free!
 
 [Note: I develop using Linux, using I suggest you to try it out with linux too... some of the accompanied windows instructions may not work]
 
